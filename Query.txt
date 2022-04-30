@@ -1,0 +1,69 @@
+select Fornitore ,sum(PrezzoFinale) as ImportoTotale from Ordinazione 
+inner join Merce on Ordinazione.OrdinazioneID=Merce.Ordinazione 
+where DataConsegna like '2021%' 
+group by Fornitore;
+
+
+
+
+
+
+
+
+select Automezzo, sum(Costounitario) as CostoPezziPerAutomezzo from Controllo 
+inner join PezzoRicambio on controllo.PezzoRicambio=PezzoRicambio.Descrizione 
+group by Automezzo 
+order by CostoPezziPerAutomezzo desc limit 1;
+
+
+
+
+
+
+
+
+
+
+
+
+
+select sum(PrezzoListino) from MerceMagazzino 
+inner join Merce on MerceMagazzino.Merce=Merce.MerceID and MerceMagazzino.Ordinazione=Merce.Ordinazione;
+
+
+
+
+
+
+
+/*Questa query mostra il il costo per mille km di un veicolo così da capire quale è il miglior guidatore*/
+select Camionista.Nome, sum(Costounitario)/(ContaKm/1000) as CostoVeicoloPerMilleKm from Controllo 
+inner join PezzoRicambio on controllo.PezzoRicambio=PezzoRicambio.Descrizione  
+inner join Automezzo on Controllo.Automezzo=Automezzo.NSerie
+inner join Camionista on Automezzo.Camionista=Camionista.Telefono 
+group by Nome 
+order by CostoVeicoloPerMilleKm desc ;
+
+
+
+
+
+
+/*Qesta query mostra la media Sconto per ognuno dei fornitori*/
+select Fornitore,100-avg(PrezzoFinale*100/PrezzoListino) from Merce 
+inner join Ordinazione on Merce.Ordinazione=Ordinazione.OrdinazioneID
+inner join Fornitore on Ordinazione.Fornitore=Fornitore.PartitaIva
+group by Fornitore;
+
+
+
+
+
+
+
+
+
+
+
+
+
